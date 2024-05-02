@@ -1,0 +1,1 @@
+sikimden aşağı kasımpaşa
