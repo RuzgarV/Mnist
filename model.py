@@ -7,24 +7,23 @@ from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 from PIL import Image
 
-# Veri dönüşümleri tanımlama
+
 transform = transforms.Compose([
-    transforms.ToTensor(),  # Görüntüyü tensöre dönüştürme
-    transforms.Normalize((0.5,), (0.5,))  # Normalizasyon
+    transforms.ToTensor(),  
+    transforms.Normalize((0.5,), (0.5,))  
 ])
 
-# MNIST veri kümesini yükleme
+
 train_dataset = torchvision.datasets.MNIST(root='./data', train=True, transform=transform, download=True)
 test_dataset = torchvision.datasets.MNIST(root='./data', train=False, transform=transform, download=True)
 
 
-# Veri yükleyicileri tanımlama
+
 
 train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
 
 
-# CNN modeli tanımlama
 
 class CNN(nn.Module):
     def __init__(self):
@@ -44,17 +43,17 @@ class CNN(nn.Module):
         x = self.fc2(x)
         return x
     
-    # Modeli ve kayıp fonksiyonunu tanımlama
+    
 model = CNN()
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-# Eğitim için kayıp ve doğruluk listeleri
+
 train_losses = []
 train_accuracies = []
 
 
-# Modeli eğitme
+
 epochs = 5
 for epoch in range(epochs):
     running_loss = 0.0
@@ -77,7 +76,7 @@ for epoch in range(epochs):
     print(f"Epoch {epoch+1}, Loss: {train_loss}, Accuracy: {train_accuracy}")
 
 
-# Modelin performansını test etme
+
 correct = 0
 total = 0
 with torch.no_grad():
@@ -89,44 +88,44 @@ with torch.no_grad():
 
 print('Test accuracy:', correct / total)    
 
-# Veri kümesini yükleme
+
 transform = torchvision.transforms.Compose([
     torchvision.transforms.ToTensor(),
 ])
 
 mnist_dataset = torchvision.datasets.MNIST(root='./data', train=True, transform=transform, download=True)
 
-# Rastgele bir örnek seçme
-index = 6000  # Rastgele bir indeks seçin (istediğiniz indeksi verebilirsiniz)
+
+index = 6000 
 image, label = mnist_dataset[index]
 
-# Görüntüyü ve etiketi gösterme
+
 plt.imshow(image.squeeze(), cmap='gray')
 plt.title(f"Label: {label}")
 plt.axis('off')
 plt.show()
 
-# Öncelikle resmi yükleyin ve uygun formata dönüştürün
+
 image = Image.open('mnist_formatinda_resim.jpg')
 transform = transforms.Compose([
-    transforms.Grayscale(),  # Resmi gri tonlamaya dönüştürme
-    transforms.Resize((28, 28)),  # Resmi 28x28 boyutuna yeniden boyutlandırma
-    transforms.ToTensor(),  # Tensöre dönüştürme
+    transforms.Grayscale(), 
+    transforms.Resize((28, 28)),  
+    transforms.ToTensor(),  
 ])
 image = transform(image)
 
-# Modeldeki parametreleri dondurucu olarak ayarlayın (eğer model eğitime devam edilecekse bu adımı atlayabilirsiniz)
+
 model.eval()
 
-# Tahmini yapın
+
 with torch.no_grad():
-    output = model(image.unsqueeze(0))  # Girdi tensörüne örnek boyutunu ekleyin
+    output = model(image.unsqueeze(0))  
     predicted_class = torch.argmax(output, dim=1)
 
-# Tahmini yazdırın
+
 print("Tahmin edilen sinif:", predicted_class.item())
 
-# Tahmini görselleştirme (isteğe bağlı)
+
 plt.imshow(image.squeeze(), cmap='gray')
 plt.title(f"Tahmin: {predicted_class.item()}")
 plt.show()
